@@ -72,31 +72,26 @@ describe('Csv', function() {
       done();
     });
 
-    it('"",,,"', function(done) {
-      assert.throws(function() {
-        csv('""",,,"');
-      }, Error);
+    it('""",,,"', function(done) {
+      assert.deepEqual(csv('""",,,"'), ['",,,'])
       done();
     });
 
     it('xxx",xxx', function(done) {
-      assert.throws(function() {
-        csv('xxx",xxx');
-      }, Error);
+      // 这里在容错，其实已经是一个错误的格式了。
+      assert.deepEqual(csv('xxx",xxx'), ['xxx"', 'xxx']);
       done();
     });
 
     it('xxx"xx,xxx', function(done) {
-      assert.throws(function() {
-        csv('xxx"xx,xxx');
-      }, Error);
+      // 这里在容错，其实已经是一个错误的格式了。
+      assert.deepEqual(csv('xxx"xx,xxx'), ['xxx"xx', 'xxx']);
       done();
     });
 
     it('xxx"""xx,xxx', function(done) {
-      assert.throws(function() {
-        csv('xxx"""xx,xxx');
-      }, Error);
+      // 这里在容错，其实已经是一个错误的格式了。
+      assert.deepEqual(csv('xxx"""xx,xxx'), ['xxx""xx', 'xxx']);
       done();
     });
 
@@ -128,6 +123,23 @@ describe('Csv', function() {
       assert.throws(function() {
         csv();
       }, Error);
+      done();
+    });
+  });
+
+  describe('Prodution env happen error', function() {
+    var csv = csvFn();
+    it('case 1', function(done) {
+      var str = '59425,1113,0,"""三英战吕布""虐杀对决 清华男神引花痴大战_一站到底在线观看_PPTV聚力>20140731>一站到底",1,7'
+        , expect = [
+          '59425',
+          '1113',
+          '0',
+          '"三英战吕布"虐杀对决 清华男神引花痴大战_一站到底在线观看_PPTV聚力>20140731>一站到底',
+          '1',
+          '7'
+        ];
+      assert.deepEqual(csv(str), expect);
       done();
     });
   });
