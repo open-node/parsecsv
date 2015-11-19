@@ -1,0 +1,23 @@
+{
+  "name": "parsecsv",
+  "version": "0.0.1",
+  "description": "Parse csv as soon as fast.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com/open-node/parsecsv.git"
+  },
+  "keywords": [
+    "csv",
+    "parser"
+  ],
+  "author": "Redstone Zhao",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/open-node/parsecsv/issues"
+  },
+  "homepage": "https://github.com/open-node/parsecsv"
+}
