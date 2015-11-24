@@ -46,47 +46,52 @@ module.exports = function(opts) {
      * 8 内码格式不限，可为 ASCII、Unicode 或者其他。
      * 9 不支持特殊字符
      */
-    while (i < l) {
-      char = line[i];
-      if (cell === '') {
-        if (head === escape) { // 头部以 escape 字符开始
-          cell += char;
-          if (char === escape) escapes += 1;
-        } else {
-          if (char === separator) { // 如果第一个就是 separator, 则当前字段是空字符串
-            cellDone();
+    if (line.indexOf(escape) === -1) {
+      row = line.split(separator);
+    } else {
+      while (i < l) {
+        char = line[i];
+        if (cell === '') {
+          if (head === escape) { // 头部以 escape 字符开始
+            cell += char;
+            if (char === escape) escapes += 1;
           } else {
-            head = char;
-            if (head !== escape) {
-              cell += char;
+            if (char === separator) { // 如果第一个就是 separator, 则当前字段是空字符串
+              cellDone();
+            } else {
+              head = char;
+              if (head !== escape) {
+                cell += char;
+              }
             }
           }
-        }
-      } else { // 当前字段已经有值了
-        if (head === escape) { // 字段以 escape 字符开头，必须要等到连续 escape 个数为奇数且紧跟着 separator 字符才结束
-          if (char === escape) escapes += 1;
-          if (char === separator) {// 如果遇到 separator 则看 escape 的连续个数
-            if (escapes % 2) { // 连续 escape 个数为奇数
-              cellDone();
+        } else { // 当前字段已经有值了
+          if (head === escape) { // 字段以 escape 字符开头，必须要等到连续 escape 个数为奇数且紧跟着 separator 字符才结束
+            if (char === escape) escapes += 1;
+            if (char === separator) {// 如果遇到 separator 则看 escape 的连续个数
+              if (escapes % 2) { // 连续 escape 个数为奇数
+                cellDone();
+              } else {
+                cell += char;
+              }
+            } else {
+              if (!(escapes % 2)) cell += char;
+            }
+            if (char !== escape) escapes = 0;
+
+          } else { // 字段不以 escape 开头，这个简单多了，等到 separator 结束，否则不断累积字符
+            if (char === separator) {
+              cellDone()
             } else {
               cell += char;
             }
-          } else {
-            if (!(escapes % 2)) cell += char;
-          }
-          if (char !== escape) escapes = 0;
-
-        } else { // 字段不以 escape 开头，这个简单多了，等到 separator 结束，否则不断累积字符
-          if (char === separator) {
-            cellDone()
-          } else {
-            cell += char;
           }
         }
+        i += 1;
       }
-      i += 1;
+      cellDone();
     }
-    cellDone();
+
     if (columns && columns !== row.length) {
       throw Error('Format error, column length error: ' + columns + ' :: ' + row.length);
     }

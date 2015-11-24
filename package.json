@@ -1,10 +1,10 @@
 {
   "name": "parsecsv",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Parse csv as soon as fast.",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "npm install && mocha"
   },
   "repository": {
     "type": "git",
